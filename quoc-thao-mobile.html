@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chặn Khóa iCloud – Quốc Thảo Mobile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0c10;
+      --surface:   #111318;
+      --card:      #161a22;
+      --border:    #232838;
+      --accent:    #3b82f6;
+      --accent2:   #6366f1;
+      --gold:      #f59e0b;
+      --text:      #e8eaf0;
+      --muted:     #8892a4;
+      --danger:    #ef4444;
+      --success:   #22c55e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── GLOW BG ── */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 900px; height: 600px;
+      background: radial-gradient(ellipse, rgba(59,130,246,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(10,12,16,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 15px; letter-spacing: .3px;
+    }
+    .nav-logo .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 10px var(--accent);
+    }
+    .nav-phone {
+      font-size: 13px; color: var(--muted);
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 6px 14px; border-radius: 999px;
+    }
+    .nav-phone span { color: var(--accent); font-weight: 600; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 80px 24px 60px;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.3);
+      color: #93c5fd;
+      font-size: 12px; font-weight: 600; letter-spacing: .8px;
+      padding: 6px 16px; border-radius: 999px;
+      margin-bottom: 28px;
+      text-transform: uppercase;
+    }
+    .badge svg { width: 14px; height: 14px; }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -.5px;
+      margin-bottom: 8px;
+    }
+    h1 .line1 { display: block; color: var(--text); }
+    h1 .line2 {
+      display: block;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-sub {
+      margin-top: 10px;
+      font-size: 15px; font-weight: 500;
+      color: var(--muted);
+      letter-spacing: .2px;
+    }
+    .brand-sub strong { color: var(--gold); font-weight: 700; }
+
+    .phone-display {
+      margin-top: 6px;
+      font-size: 17px; font-weight: 700;
+      color: var(--text);
+    }
+    .phone-display a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(59,130,246,0.4);
+    }
+
+    /* ── DOWNLOAD BUTTON ── */
+    .dl-wrap {
+      margin: 36px auto 0;
+      display: inline-flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .btn-download {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-family: inherit;
+      font-size: 16px; font-weight: 700;
+      padding: 16px 36px;
+      border: none; border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 32px rgba(59,130,246,0.35);
+      transition: transform .15s, box-shadow .15s;
+      text-decoration: none;
+    }
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(59,130,246,0.5);
+    }
+    .btn-download:active { transform: translateY(0); }
+    .btn-download svg { width: 22px; height: 22px; }
+
+    .dl-note {
+      font-size: 12px; color: var(--muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .dl-note svg { width: 13px; height: 13px; color: var(--success); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      margin: 0 auto 40px;
+      border-radius: 999px;
+    }
+
+    /* ── SECTION ── */
+    section {
+      position: relative; z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+    .section-label {
+      text-align: center;
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      text-align: center;
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 700;
+      margin-bottom: 40px;
+      color: var(--text);
+    }
+
+    /* ── CARDS ── */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 20px;
+      transition: border-color .2s, transform .2s;
+    }
+    .card:hover {
+      border-color: rgba(59,130,246,0.35);
+      transform: translateY(-3px);
+    }
+    .card-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+      font-size: 22px;
+    }
+    .icon-blue  { background: rgba(59,130,246,0.15); }
+    .icon-purple{ background: rgba(99,102,241,0.15); }
+    .icon-gold  { background: rgba(245,158,11,0.15); }
+    .icon-red   { background: rgba(239,68,68,0.12); }
+    .icon-green { background: rgba(34,197,94,0.12); }
+    .icon-teal  { background: rgba(20,184,166,0.12); }
+
+    .card h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+    .card p  { font-size: 13px; line-height: 1.65; color: var(--muted); }
+
+    /* ── WARNING BOX ── */
+    .warning-box {
+      background: rgba(245,158,11,0.07);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .warning-box .wi { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .warning-box p { font-size: 13px; line-height: 1.7; color: #fcd34d; }
+    .warning-box p strong { color: #fbbf24; font-weight: 700; }
+
+    /* ── HOW TO INSTALL ── */
+    .steps { display: flex; flex-direction: column; gap: 16px; }
+    .step {
+      display: flex; gap: 16px; align-items: flex-start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .step-num {
+      width: 32px; height: 32px; flex-shrink: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800; color: #fff;
+    }
+    .step-body h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .step-body p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── CONTACT ── */
+    .contact-card {
+      background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(99,102,241,0.1));
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 20px;
+      padding: 36px 28px;
+      text-align: center;
+    }
+    .contact-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .contact-card .tagline { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+    .contact-btns {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+    }
+    .contact-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 14px; font-weight: 600;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .15s;
+      cursor: pointer;
+    }
+    .contact-btn:hover { transform: translateY(-2px); }
+    .btn-zalo  { background: #0068ff; color: #fff; box-shadow: 0 4px 20px rgba(0,104,255,.3); }
+    .btn-phone { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    footer strong { color: var(--text); }
+
+    @media (max-width: 540px) {
+      nav { padding: 14px 16px; }
+      .hero { padding: 56px 16px 48px; }
+      .btn-download { font-size: 15px; padding: 14px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="dot"></div>
+    Quốc Thảo Mobile
+  </div>
+  <div class="nav-phone">Zalo: <span>0977 326 264</span></div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Dành riêng cho iPhone / iPad
+  </div>
+
+  <h1>
+    <span class="line1">Chặn Khóa &amp; Thông Báo</span>
+    <span class="line2">Nhập iCloud</span>
+  </h1>
+
+  <p class="brand-sub">Phát triển bởi <strong>Quốc Thảo Mobile</strong></p>
+  <p class="phone-display">Số điện thoại: <a href="tel:0977326264">0977 326 264</a></p>
+
+  <div class="dl-wrap">
+    <a class="btn-download" id="downloadBtn" href="#" onclick="downloadProfile(event)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Tải File Cấu Hình (.mobileconfig)
+    </a>
+    <span class="dl-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Chỉ cài được trên thiết bị iOS — iPhone &amp; iPad
+    </span>
+  </div>
+</div>
+
+<!-- GIỚI THIỆU -->
+<section>
+  <div class="divider"></div>
+  <p class="section-label">Giới thiệu</p>
+  <p class="section-title">File này hoạt động như thế nào?</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-icon icon-blue">🔒</div>
+      <h3>Chặn kết nối iCloud</h3>
+      <p>Chặn toàn bộ các domain liên quan đến iCloud, ngăn thiết bị nhận lệnh khóa từ xa của Apple.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon icon-purple">📲</div>
+      <h3>Mở App Store bình thường</h3>
+      <p>Vẫn sử dụng được App Store, tải app, chơi game hoàn toàn bình thường trong thời gian cài profile.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon icon-gold">⚙️</div>
+      <h3>Cấu hình DNS hệ thống</h3>
+      <p>Profile hoạt động ở cấp hệ thống (System), áp dụng toàn bộ kết nối, không cần jailbreak.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon icon-red">🚫</div>
+      <h3>Phù hợp máy dính iCloud vay</h3>
+      <p>Thiết bị bị dính iCloud do vay nóng, lừa đảo — giải pháp tạm thời để máy hoạt động trong khi chờ xử lý.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon icon-green">✅</div>
+      <h3>Không cần jailbreak</h3>
+      <p>Cài qua Settings chuẩn của Apple. Không can thiệp hệ điều hành, không mất bảo hành phần cứng.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon icon-teal">🛡️</div>
+      <h3>Giải pháp tạm thời an toàn</h3>
+      <p>Dành cho máy <strong>chưa bị khóa</strong>, giúp kéo dài thời gian sử dụng trong khi tìm cách xử lý triệt để.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CẢNH BÁO -->
+<section style="padding-top: 0;">
+  <div class="warning-box">
+    <div class="wi">⚠️</div>
+    <p>
+      <strong>Lưu ý quan trọng:</strong> Đây là <strong>giải pháp tạm thời</strong>, không phải unlock vĩnh viễn. Profile chặn kết nối iCloud giúp thiết bị <strong>chưa bị khóa</strong> tiếp tục hoạt động. Nếu máy đã bị khóa hoàn toàn, cần liên hệ để được tư vấn giải pháp phù hợp hơn.
+    </p>
+  </div>
+</section>
+
+<!-- HƯỚNG DẪN CÀI -->
+<section style="padding-top: 0;">
+  <div class="divider"></div>
+  <p class="section-label">Hướng dẫn</p>
+  <p class="section-title">Cách cài đặt trên iPhone</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Nhấn nút tải file bên trên</h4>
+        <p>Trình duyệt Safari sẽ tải file <code>.mobileconfig</code> về thiết bị. Nên dùng Safari để tránh lỗi.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Mở Cài đặt → Đã tải về Profile</h4>
+        <p>Vào <strong>Settings (Cài đặt)</strong> → sẽ xuất hiện mục <strong>"Đã tải về Profile"</strong> ở trên cùng. Nhấn vào đó.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Nhấn Cài đặt → Tiếp tục → Cài đặt</h4>
+        <p>Xác nhận cài đặt profile. Nhập mật khẩu màn hình nếu được yêu cầu. Nhấn <strong>Cài đặt</strong> để hoàn tất.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4>Khởi động lại thiết bị</h4>
+        <p>Restart iPhone để profile được áp dụng hoàn toàn. Sau đó thiết bị sẽ chặn kết nối iCloud tự động.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIÊN HỆ -->
+<section style="padding-top: 0;">
+  <div class="contact-card">
+    <h2>Cần hỗ trợ thêm?</h2>
+    <p class="tagline">Liên hệ Quốc Thảo Mobile để được tư vấn trực tiếp — nhanh, nhiệt tình</p>
+    <div class="contact-btns">
+      <a class="contact-btn btn-zalo" href="https://zalo.me/0977326264" target="_blank">
+        💬 Nhắn Zalo ngay
+      </a>
+      <a class="contact-btn btn-phone" href="tel:0977326264">
+        📞 0977 326 264
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Quốc Thảo Mobile</strong> · Chuyên giải pháp iCloud · Liên hệ: 0977 326 264<br/>
+  <span style="margin-top:6px;display:block;">File cấu hình chỉ dành cho thiết bị iOS — cài đặt đúng hướng dẫn để đạt hiệu quả tốt nhất.</span>
+</footer>
+
+<script>
+  function downloadProfile(e) {
+    e.preventDefault();
+
+    const base64 = "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCFET0NUWVBFIHBsaXN0IFBVQkxJQyAiLS8vQXBwbGUvL0RURCBQTElTVCAxLjAvL0VOIiAiaHR0cDovL3d3dy5hcHBsZS5jb20vRFREcy9Qcm9wZXJ0eUxpc3QtMS4wLmR0ZCI+CjxwbGlzdCB2ZXJzaW9uPSIxLjAiPgo8ZGljdD4KCTxrZXk+UGF5bG9hZENvbnRlbnQ8L2tleT4KCTxhcnJheT4KCQk8ZGljdD4KCQkJPGtleT5ETlNTZXR0aW5nczwva2V5PgoJCQk8ZGljdD4KCQkJCTxrZXk+RE5TUHJvdG9jb2w8L2tleT4KCQkJCTxzdHJpbmc+SFRUUFM8L3N0cmluZz4KCQkJCTxrZXk+U2VydmVyQWRkcmVzc2VzPC9rZXk+CgkJCQk8YXJyYXk+CgkJCQkJPHN0cmluZz4xMjcuMC4wLjE8L3N0cmluZz4KCQkJCQk8c3RyaW5nPjo6MTwvc3RyaW5nPgoJCQkJPC9hcnJheT4KCQkJCTxrZXk+U2VydmVyTmFtZTwva2V5PgoJCQkJPHN0cmluZz5ibG9jay5pbnZhbGlkPC9zdHJpbmc+CgkJCQk8a2V5PlNlcnZlclVSTDwva2V5PgoJCQkJPHN0cmluZz5odHRwczovL2Jsb2NrLmludmFsaWQvZG5zLXF1ZXJ5PC9zdHJpbmc+CgkJCQk8a2V5PlN1cHBsZW1lbnRhbE1hdGNoRG9tYWluczwva2V5PgoJCQkJPGFycmF5PgoJCQkJCTxzdHJpbmc+aWNsb3VkLmNvbTwvc3RyaW5nPgoJCQkJCTxzdHJpbmc+YXBwbGUtZG5zLm5ldDwvc3RyaW5nPgoJCQkJCTxzdHJpbmc+bWUuY29tPC9zdHJpbmc+CgkJCQkJPHN0cmluZz5hcHBsZS1jbG91ZGtpdC5jb208L3N0cmluZz4KCQkJCQk8c3RyaW5nPmFwcGxlLWxpdmVwaG90b3NraXQuY29tPC9zdHJpbmc+CgkJCQkJPHN0cmluZz5tZXN1LmFwcGxlLmNvbTwvc3RyaW5nPgoJCQkJCTxzdHJpbmc+Z2RtZi5hcHBsZS5jb208L3N0cmluZz4KCQkJCQk8c3RyaW5nPnhwLmFwcGxlLmNvbTwvc3RyaW5nPgoJCQkJCTxzdHJpbmc+ZmJhLmFwcGxlLmNvbTwvc3RyaW5nPgoJCQkJCTxzdHJpbmc+aWFkc2RrLmFwcGxlLmNvbTwvc3RyaW5nPgoJCQkJPC9hcnJheT4KCQkJPC9kaWN0PgoJCQk8a2V5Pk9uRGVtYW5kUnVsZXM8L2tleT4KCQkJPGFycmF5PgoJCQkJPGRpY3Q+CgkJCQkJPGtleT5BY3Rpb248L2tleT4KCQkJCQk8c3RyaW5nPkNvbm5lY3Q8L3N0cmluZz4KCQkJCTwvZGljdD4KCQkJPC9hcnJheT4KCQkJPGtleT5QYXlsb2FkRGlzcGxheU5hbWU8L2tleT4KCQkJPHN0cmluZz5I4buHIHRo4buRbmcgY2jhurduIG3huqFuZyBi4bqjbyBt4bqtdCBBcHBsZSAoVMO5eSBjaOG7iW5oIGRvIFF14buRYyBUaOG6o28gTW9iaWxlIHBow6F0IHRyaeG7g24pPC9zdHJpbmc+CgkJCTxrZXk+UGF5bG9hZElkZW50aWZpZXI8L2tleT4KCQkJPHN0cmluZz5jb20uYXBwbGUuZG5zU2V0dGluZ3MubWFuYWdlZC5ibG9jay1vdGEucGVybWFuZW50PC9zdHJpbmc+CgkJCTxrZXk+UGF5bG9hZFR5cGU8L2tleT4KCQkJPHN0cmluZz5jb20uYXBwbGUuZG5zU2V0dGluZ3MubWFuYWdlZDwvc3RyaW5nPgoJCQk8a2V5PlBheWxvYWRVVUlEPC9rZXk+CgkJCTxzdHJpbmc+QTFFMkYyNjItREI3My00MEY2LUJEMjItMkU0MkE0M0EzQzk0PC9zdHJpbmc+CgkJCTxrZXk+UGF5bG9hZFZlcnNpb248L2tleT4KCQkJPGludGVnZXI+MTwvaW50ZWdlcj4KCQkJPGtleT5Qcm9oaWJpdGFibGU8L2tleT4KCQkJPGZhbHNlLz4KCQk8L2RpY3Q+Cgk8L2FycmF5PgoJPGtleT5QYXlsb2FkRGVzY3JpcHRpb248L2tleT4KCTxzdHJpbmc+Q+G6pXUgaMOsbmggaOG7kSDEkWVuIEROUyBj4bulYyBi4buZIC0gxJDDoyBt4bufIGtow7NhIEFwcCBTdG9yZSAobGnDqm4gaOG7hyB6YWxvIDA5NzczMjYyNjQgxJHhu4MgbXVhIGZpbGUpLjwvc3RyaW5nPgoJPGtleT5QYXlsb2FkRGlzcGxheU5hbWU8L2tleT4KCTxzdHJpbmc+Q2jhurduIEtow7NhIGlQaG9uZSAoxJDDoyBt4bufIEFwcCBTdG9yZSk8L3N0cmluZz4KCTxrZXk+UGF5bG9hZElkZW50aWZpZXI8L2tleT4KCTxzdHJpbmc+Y29tLmV4YW1wbGUuc3lzdGVtd2lkZS5kbnMubmV4dGRucy5vdGEtYmxvY2s8L3N0cmluZz4KCTxrZXk+UGF5bG9hZE9yZ2FuaXphdGlvbjwva2V5PgoJPHN0cmluZz5DaOG7iW5oIHPhu61hIGLhu59pIFF14buRYyBUaOG6o28gTW9iaWxlPC9zdHJpbmc+Cgk8a2V5PlBheWxvYWRSZW1vdmFsRGlzYWxsb3dlZDwva2V5PgoJPGZhbHNlLz4KCTxrZXk+UGF5bG9hZFNjb3BlPC9rZXk+Cgk8c3RyaW5nPlN5c3RlbTwvc3RyaW5nPgoJPGtleT5QYXlsb2FkVHlwZTwva2V5PgoJPHN0cmluZz5Db25maWd1cmF0aW9uPC9zdHJpbmc+Cgk8a2V5PlBheWxvYWRVVUlEPC9rZXk+Cgk8c3RyaW5nPkU2RDJCOThGLTExRjItNDZFMS04NERCLTNBQTFEQUVERTg1Qjwvc3RyaW5nPgoJPGtleT5QYXlsb2FkVmVyc2lvbjwva2V5PgoJPGludGVnZXI+MTwvaW50ZWdlcj4KPC9kaWN0Pgo8L3BsaXN0Pg==";
+
+    const binary = atob(base64.replace(/\s/g,''))
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+    const blob = new Blob([bytes], { type: 'application/x-apple-aspen-config' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Chan_Khoa_iCloud_QuocThaoMobile.mobileconfig';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+</script>
+
+</body>
+</html>
